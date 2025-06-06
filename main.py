@@ -31,30 +31,30 @@ sd = input('select dns: ')  # 'sd' -> selected DNS
     
 cnc = subprocess.run(['ipconfig', '/all'], capture_output=True).stdout.decode()  # 'cnc' -> cmd network check
 cenf = list(re.findall('Ethernet adapter (.*):', cnc))  # 'cenf' -> cmd ethernet network find
-# cwnf = list(re.findall('Wireless LAN adapter (.*):', cnc))  # 'cwnf' -> cmd wifi network find
+cwnf = list(re.findall('Wireless LAN adapter (.*):', cnc))  # 'cwnf' -> cmd wifi network find
 if sd == 'f':
     cfd = subprocess.run(['ipconfig', '/flushdns'])  # 'cfd' -> Cmd flush DNS
 else:
     num = 0
     nl = []  # 'nl' -> Network list
-    head = ('    ' + 71 * '_')
-    body = ('    |' + 69 * '-' + '|')
-    print(head, '    |' + (18 * ' ') + 'Network name' + (18 * ' ') + '|   Network number   |', body, sep='\n')
+    head = ('    ' + 89 * '_')
+    body = ('    |' + 87 * '-' + '|')
+    print(head, '    | Connection type |' + (18 * ' ') + 'Network name' + (18 * ' ') + '|   Network number   |', body, sep='\n')
     for network in cenf:
         num += 1
         nn = (int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' )  # 'nn' -> Network name
         nc = (f'        ({num})         ')  # 'nc' -> Network code
         # print('    |' + int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' + '|' + f'        ({num})         |', body, sep='\n')
-        print('    |' + nn + '|' + nc + '|', body, sep='\n')
+        print('    |     Ethernet    |' + nn + '|' + nc + '|', body, sep='\n')
         nl.append(network)
 
-    # for network in cwnf:
-    #     num += 1
-    #     nn = (int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-    #     nc = (f'        ({num})         ')  # 'nc' -> Network code
-    #     # print('    |' + int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' + '|' + f'        ({num})         |', body, sep='\n')
-    #     print('    |' + nn + '|' + nc + '|', body, sep='\n')
-    #     nl.append(network)
+    for network in cwnf:
+        num += 1
+        nn = (int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' )  # 'nn' -> Network name
+        nc = (f'        ({num})         ')  # 'nc' -> Network code
+        # print('    |' + int(abs(float(len(network) - 48) // 2)) * ' ' + f'{network}' + int(abs(float(len(network) - 48) / 2)) * ' ' + '|' + f'        ({num})         |', body, sep='\n')
+        print('    |      Wi-Fi      |' + nn + '|' + nc + '|', body, sep='\n')
+        nl.append(network)
     ns = int(input('\nselect your network: '))  # 'ns' -> Network select
 
 if sd == '1':
@@ -87,7 +87,7 @@ elif sd == '5':
     print(f"You are now using the '{a_t[0]}' DNS \nGood luck!")
     time.sleep(2)
     os.system('cls')
-elif sd == 'd' or 'D':
+elif sd == 'd':
     cpds = os.system(f'netsh interface ipv4 set dns "{nl[ns-1]}" dhcp')
 
 elif sd == 'f':
