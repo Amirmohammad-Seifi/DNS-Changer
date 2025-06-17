@@ -5,6 +5,7 @@ g_t = ('Google public', '8.8.8.8', '8.8.4.4')
 od_t = ('OpenDNS', '208.67.222.222', '208.67.220.220')
 sh_t = ('Shecan', '178.22.122.100', '185.51.200.2')
 a_t = ('Azad(403)', '10.202.10.202', '10.202.10.102')
+b_t = ('Begzar', '185.55.226.26', '185.55.225.25')
 print('Welcome to DNS changer')
 print("""DNS servers list:
      ________________________________________
@@ -19,6 +20,8 @@ print("""DNS servers list:
      |      Shecan      |       (4)         |
      |--------------------------------------|
      |     Azad(403)    |       (5)         |
+     |--------------------------------------|
+     |      Begzar      |       (6)         |
      |--------------------------------------|
      |       DHCP       |       (d)         |
      |--------------------------------------|
@@ -87,6 +90,13 @@ elif sd == '5':
     print(f"You are now using the '{a_t[0]}' DNS \nGood luck!")
     time.sleep(2)
     os.system('cls')
+elif sd == '6':
+    cpds = os.system(f'netsh interface ipv4 set dns "{nl[ns-1]}" static {b_t[1]}')
+    csds = os.system(f'netsh interface ipv4 add dns "{nl[ns-1]}" {b_t[2]} index=2')
+    print(f"You are now using the '{b_t[0]}' DNS \nGood luck!")
+    time.sleep(2)
+    os.system('cls')
+
 elif sd == 'd':
     cpds = os.system(f'netsh interface ipv4 set dns "{nl[ns-1]}" dhcp')
 
