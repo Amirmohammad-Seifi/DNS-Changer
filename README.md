@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/github/license/Amirmohammad-Seifi/DNS-Changer?style=for-the-badge&color=blueviolet" />
 </p>
 
-A simple project to quickly change your system's DNS on Windows. With this tool, you can easily switch your DNS address to a popular and high-speed service with just a single click.
+A simple project to quickly change your system's DNS on Linux. With this tool, you can easily switch your DNS address to a popular and high-speed service with just a single click.
 
 #### Features
 * **Simple and Minimalist UI:** Designed for ease of use.
