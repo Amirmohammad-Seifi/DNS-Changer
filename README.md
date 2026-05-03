@@ -1,9 +1,9 @@
 ### DNS Changer
 <p align="center">
-  <img src="https://img.shields.io/github/stars/Amirmohammad-Seifi/DNS-Changer?style=for-the-badge&logo=github&color=FFD700" />
-  <img src="https://img.shields.io/github/watchers/Amirmohammad-Seifi/DNS-Changer?style=for-the-badge&logo=github&color=orange" />
-  <img src="https://img.shields.io/github/forks/Amirmohammad-Seifi/DNS-Changer?style=for-the-badge&logo=github" />
-  <img src="https://img.shields.io/github/license/Amirmohammad-Seifi/DNS-Changer?style=for-the-badge&color=blueviolet" />
+  <img src="https://img.shields.io/github/stars/D4rk-Side/DNS-Changer?style=for-the-badge&logo=github&color=FFD700" />
+  <img src="https://img.shields.io/github/watchers/D4rk-Side/DNS-Changer?style=for-the-badge&logo=github&color=orange" />
+  <img src="https://img.shields.io/github/forks/D4rk-Side/DNS-Changer?style=for-the-badge&logo=github" />
+  <img src="https://img.shields.io/github/license/D4rk-Side/DNS-Changer?style=for-the-badge&color=blueviolet" />
 </p>
 
 A simple project to quickly change your system's DNS on Windows. With this tool, you can easily switch your DNS address to a popular and high-speed service with just a single click.
