@@ -199,17 +199,31 @@ match system:
         match release:
             case '7':
                 def dns_loader_win7(dnscode):
-                    cpds = os.system(f'netsh interface ipv4 set dns "{nl[int(ns) - 1]}" static {dnscode["Primary DNS Server"]}')  # 'cpds' -> cmd primary DNS set
-                    csds = os.system(f'netsh interface ipv4 add dns "{nl[int(ns) - 1]}" {dnscode["Secondary DNS Server"]} index=2')  # 'csds' -> cmd secondary DNS set
-                    print(f"You are now using the '{dnscode['DNS Server Name']}' DNS \nGood luck!")
-                    time.sleep(2)
-                    os.system('cls')
+                    try:
+                        _ = subprocess.run(['netsh', 'interface', 'ipv4', 'set', 'dns', f'"{nl[int(ns) - 1]}"', 'static', dnscode["Primary DNS Server"]], capture_output = True)
+                        a = re.findall('returncode=(.*), stdout', str(_))
+                        _ = subprocess.run(['netsh', 'interface', 'ipv4', 'add', 'dns', f'"{nl[int(ns) - 1]}"', dnscode["Primary DNS Server"], 'index=2'], capture_output = True)
+                        b = re.findall('returncode=(.*), stdout', str(_))
+                        if a[0] == '1' or b[0] == '1':
+                            print('DNS Changing Process Failed.')
+                        else:
+                            if aflush == 1:
+                                print(f"You are now using the '{dnscode['DNS Server Name']}' DNS")
+                                flush_dns()
+                                print('Good luck!')
+                            else:
+                                print(f"You are now using the '{dnscode['DNS Server Name']}' DNS \nGood luck!")
+                        time.sleep(2)
+                        os.system('cls')
+                    except Exception as e:
+                        print(f'DNS Changing Process Failed. Error -> {e}')
                 while True:
+                    dns_menu()
                     sd = input('select dns: ')  # 'sd' -> selected DNS
                     if sd in valid_codes:
                         match sd:
                             case 'f':
-                                cfd = subprocess.run(['ipconfig', '/flushdns'])  # 'cfd' -> Cmd flush DNS
+                                flush_dns()
                                 time.sleep(2)
                                 os.system('cls')
                             case 'd':
@@ -222,13 +236,15 @@ match system:
                                     if 'Ethernet adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[17:]) - 48) // 2)) * ' ' + f'{network[17:]}' + int(abs(float(len(network[17:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        # nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '
                                         print('    |     Ethernet    |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[17:])
                                     elif 'Wireless LAN adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[21:]) - 48) // 2)) * ' ' + f'{network[21:]}' + int(abs(float(len(network[21:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        # nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '
                                         print('    |       Wi-Fi     |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[21:])
                                 for i in range(1, len(nl) + 1):
@@ -236,13 +252,24 @@ match system:
                                 while True:
                                     ns = input('select your network: ')  # 'ns' -> Network select
                                     if ns in valid_networks:
-                                        cpds = os.system(f'netsh interface ipv4 set dns "{nl[int(ns) - 1]}" dhcp')
-                                        print(f"Now your DNS set on Dynamic Host Configuration Protocol(DHCP) \nGood luck!")
+                                        # cpds = os.system(f'netsh interface ipv4 set dns "{nl[int(ns) - 1]}" dhcp')
+                                        # print(f"Now your DNS set on Dynamic Host Configuration Protocol(DHCP) \nGood luck!")
+                                        cpds = subprocess.run(['netsh', 'interface', 'ipv4', 'set', 'dns', f'"{nl[int(ns) - 1]}"', 'dhcp'], capture_output = True)
+                                        a = re.findall('returncode=(.*), stdout', str(cpds))
+                                        if a[0] == '1':
+                                            print('DNS Changing Process Failed.')
+                                        else:
+                                            print(
+                                                f"Now your DNS set on Dynamic Host Configuration Protocol(DHCP) \nGood luck!")
                                         time.sleep(2)
                                         os.system('cls')
                                         break
                                     else:
                                         print('Please enter a valid network code.')
+                            case 's':
+                                settings_menu()
+                            case 'q':
+                                exit()
                             case _:
                                 num = 0
                                 nl = []  # 'nl' -> Network list
@@ -253,13 +280,13 @@ match system:
                                     if 'Ethernet adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[17:]) - 48) // 2)) * ' ' + f'{network[17:]}' + int(abs(float(len(network[17:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
                                         print('    |     Ethernet    |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[17:])
                                     elif 'Wireless LAN adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[21:]) - 48) // 2)) * ' ' + f'{network[21:]}' + int(abs(float(len(network[21:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
                                         print('    |       Wi-Fi     |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[21:])
                                 for i in range(1, len(nl) + 1):
@@ -267,7 +294,7 @@ match system:
                                 while True:
                                     ns = input('select your network: ')  # 'ns' -> Network select
                                     if ns in valid_networks:
-                                        dns_loader_win7((dls[int(sd) - 1]), dls[int(sd) - 1])
+                                        dns_loader_win7((dls[int(sd) - 1]))
                                         break
                                     else:
                                         print('Please enter a valid network code.')
@@ -292,8 +319,8 @@ match system:
                                 print(f"You are now using the '{dnscode['DNS Server Name']}' DNS \nGood luck!")
                         time.sleep(2)
                         os.system('cls')
-                    except:
-                        print('DNS Changing Process Failed.')
+                    except Exception as e:
+                        print(f'DNS Changing Process Failed. Error -> {e}')
                 while True:
                     dns_menu()
                     sd = input('select dns: ')  # 'sd' -> selected DNS
@@ -313,13 +340,15 @@ match system:
                                     if 'Ethernet adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[17:]) - 48) // 2)) * ' ' + f'{network[17:]}' + int(abs(float(len(network[17:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        # nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '
                                         print('    |     Ethernet    |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[17:])
                                     elif 'Wireless LAN adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[21:]) - 48) // 2)) * ' ' + f'{network[21:]}' + int(abs(float(len(network[21:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        # nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '
                                         print('    |       Wi-Fi     |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[21:])
                                 for i in range(1, len(nl) + 1):
@@ -352,13 +381,13 @@ match system:
                                     if 'Ethernet adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[17:]) - 48) // 2)) * ' ' + f'{network[17:]}' + int(abs(float(len(network[17:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
                                         print('    |     Ethernet    |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[17:])
                                     elif 'Wireless LAN adapter' in network:
                                         num += 1
                                         nn = (int(abs(float(len(network[21:]) - 48) // 2)) * ' ' + f'{network[21:]}' + int(abs(float(len(network[21:]) - 48) / 2)) * ' ' )  # 'nn' -> Network name
-                                        nc = (f'        ({num})         ')  # 'nc' -> Network code
+                                        nc = 7 * ' ' + num + 8 * ' '  # 'nc' -> Network code
                                         print('    |       Wi-Fi     |' + nn + '|' + nc + '|', body, sep='\n')
                                         nl.append(network[21:])
                                 for i in range(1, len(nl) + 1):
